@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "csi-bottle.fullname" . }}-test
+  labels:
+    {{- include "csi-bottle.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: main
+    image: docker.io/nginx
+    resources:
+      limits:
+        cpu: 100m
+        memory: 250Mi
+    volumeMounts:
+    - name: data
+      mountPath: /var/www/html
+  volumes:
+  - name: data
+    csi:
+      driver: bottle.csi.act3-ace.io
+      volumeAttributes:
+        # Specify your bottle here.
+        bottle: us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6
+        # Specify selectors to limit data
+        selector: "subset=train,component=image|usage=true"

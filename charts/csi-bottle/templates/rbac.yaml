@@ -1,0 +1,44 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "csi-bottle.serviceAccountName" . }}
+  labels:
+    {{- include "csi-bottle.labels" . | nindent 4 }}
+---
+# Events are created in the referenced objects namespace so we need permissions to create events in every namespace (hence the ClusterRole)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "csi-bottle.serviceAccountName" . }}
+  labels:
+    {{- include "csi-bottle.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "csi-bottle.serviceAccountName" . }}
+  labels:
+    {{- include "csi-bottle.labels" . | nindent 4 }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "csi-bottle.serviceAccountName" . }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "csi-bottle.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end -}}

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: csi-bottle
+description: CSI driver for data bottles
+type: application
+version: 0.6.11
+appVersion: 0.6.11
+sources:
+  - https://gitlab.com/act3-ai/asce/data/csi
+maintainers:
+  - name: Kyle M. Tarplee
+    email: kyle.tarplee@udri.udayton.edu

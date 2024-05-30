@@ -1,0 +1,8 @@
+extends: relaxed
+
+rules:
+  line-length: false
+  trailing-spaces: false
+
+ignore:
+  - charts/csi-bottle/templates

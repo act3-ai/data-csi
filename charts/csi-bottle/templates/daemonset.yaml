@@ -1,0 +1,180 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "csi-bottle.fullname" . }}
+  labels:
+    {{- include "csi-bottle.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "csi-bottle.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "csi-bottle.selectorLabels" . | nindent 8 }}
+    spec:
+      # hostNetwork: true # KMT - we should not need hostNetwork
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "csi-bottle.serviceAccountName" . }}
+      containers:
+        - name: node-driver-registrar
+          image: "{{ .Values.registrar.image.repository }}:{{ .Values.registrar.image.tag }}"
+          imagePullPolicy: {{ .Values.registrar.image.pullPolicy }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "rm -rf /registration/bottle.csi.act3-ace.io /registration/bottle.csi.act3-ace.io-reg.sock"]
+          args:
+            # - --v=5
+            - --csi-address=/csi/csi.sock
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/bottle.csi.act3-ace.io/csi.sock
+            - --health-port=9809
+          env:
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.memory
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.cpu
+          volumeMounts:
+          - mountPath: /csi
+            name: plugin-dir
+          - mountPath: /registration
+            name: registration-dir
+          ports:
+            - containerPort: 9809
+              name: healthz-reg
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz-reg
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          resources:
+            {{- toYaml .Values.registrar.resources | nindent 12 }}
+        
+        - name: liveness-probe
+          image: "{{ .Values.liveness.image.repository }}:{{ .Values.liveness.image.tag }}"
+          imagePullPolicy: {{ .Values.liveness.image.pullPolicy }}
+          args:
+          - --csi-address=/csi/csi.sock
+          env:
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.memory
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.cpu
+          volumeMounts:
+          - name: plugin-dir
+            mountPath: /csi
+          resources:
+            {{- toYaml .Values.liveness.resources | nindent 12 }}
+        # This is the main container (the so called CSI driver)
+        - name: driver
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          - serve
+          env:
+            - name: ACE_DATA_CSI_VERBOSITY
+              value: {{ .Values.verbosity | quote }}
+            - name: ACE_DATA_CSI_ENDPOINT
+              value: unix:///csi/csi.sock
+            - name: ACE_DATA_CSI_STORAGEDIR
+              value: /data
+            - name: ACE_DATA_CSI_NODEID
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: ACE_DATA_CSI_PRUNESIZE
+              value: {{ .Values.prune.size }}
+            - name: ACE_DATA_CSI_PRUNEPERIOD
+              value: {{ .Values.prune.period }}
+            - name: ACE_DATA_CSI_TELEMETRY
+              value: {{ .Values.telemetry }}
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.memory
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  divisor: "0"
+                  resource: limits.cpu
+          # healthz is actually served by the livelinessprobe sidecar (not this container) but this container needs to be restarted if it fails.
+          ports:
+          - containerPort: 9808
+            name: healthz
+          - containerPort: 9102
+            name: metrics
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 2
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+            - name: mountpoint-dir
+              mountPath: /var/lib/kubelet/pods
+              mountPropagation: Bidirectional
+            - name: storage-dir
+              mountPath: /data
+
+      volumes:
+        - name: plugin-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/bottle.csi.act3-ace.io
+            type: DirectoryOrCreate
+        - name: mountpoint-dir
+          hostPath:
+            path: /var/lib/kubelet/pods
+            type: DirectoryOrCreate
+        - name: registration-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins_registry
+            type: Directory
+        - name: storage-dir
+          hostPath:
+            path: {{ .Values.storageDir }}
+            type: DirectoryOrCreate

@@ -1,0 +1,22 @@
+/bin
+/ci-bin
+/test-secrets.yaml
+/test-auth.json
+/tool
+.vagrant
+
+# Useful for ignoring the build tool
+/.go
+/tool
+/coverage*.*
+/report.*
+/profile.cov
+/integration
+
+## Ignore logfiles
+/log
+
+/.env*
+/ci-dist/
+
+/.kubeconfig.yaml

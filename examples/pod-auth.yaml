@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-csi-auth
+spec:
+  containers:
+  - name: main
+    image: nginx
+    resources:
+      limits:
+        cpu: 100m
+        memory: 250Mi
+    volumeMounts:
+    - name: data
+      mountPath: /var/www/html
+  volumes:
+  - name: data
+    csi:
+      driver: bottle.csi.act3-ace.io
+      nodePublishSecretRef:
+        name: test-secret
+      volumeAttributes:
+        # Specify your bottle here.
+        bottle: reg.git.act3-ace.com/ace/data/tool/bottle/mnist:v1.6
+        selector: "subset=train,component=image|type=usage"

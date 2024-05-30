@@ -1,0 +1,4 @@
+# Specify your bottle here.
+bottle: reg.git.act3-ace.com/ace/data/tool/bottle/mnist:v1.6
+# Specify selectors to limit data
+selector: "subset=train,component=image|usage=true"

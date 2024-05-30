@@ -1,0 +1,96 @@
+include:
+  - project: devsecops/cicd/pipeline
+    ref: v19.0.17
+    file: main.yml
+
+golang unit test:
+  variables:
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 16
+    KUBERNETES_MEMORY_REQUEST: 8Gi
+    KUBERNETES_MEMORY_LIMIT: 64Gi
+
+govulncheck:
+  variables:
+    KUBERNETES_CPU_REQUEST: 3
+    KUBERNETES_CPU_LIMIT: 8
+    KUBERNETES_MEMORY_REQUEST: 4Gi
+    KUBERNETES_MEMORY_LIMIT: 12Gi
+
+############################################################
+# Build jobs
+############################################################
+
+build binaries:
+  extends: .go build
+  variables:
+    EXECUTABLE: "csi-bottle"
+  parallel:
+    matrix:
+      - GOOS:
+          - linux
+        GOARCH:
+          - amd64
+
+build fips:
+  extends: .go build fips
+  variables:
+    EXECUTABLE: "csi-bottle"
+
+generate cli docs:
+  stage: Release
+  needs:
+    - build binaries
+  rules:
+    # Skip release commits
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TITLE =~ /^chore\(release\):(.*)$/ && $CI_PIPELINE_SOURCE != "schedule"'
+      when: never
+    # Run for all commits to default branch
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $DEP_CHECK != "true"'
+  image: cgr.dev/chainguard/wolfi-base
+  variables:
+    EXECUTABLE: "csi-bottle"
+  script:
+    - rm -rf docs/cli/
+    # Set HOME to the literal "HOMEDIR" so documentation does not contain the user's home directory
+    - HOME=HOMEDIR NO_COLOR=1 ci-dist/$EXECUTABLE/linux/amd64/bin/$EXECUTABLE gendocs md --only-commands docs/cli/
+    # Clean up go caching stuff placed in the dummy "HOMEDIR" directory
+    - rm -rf HOMEDIR
+  artifacts:
+    paths:
+      - docs/cli/
+
+############################################################
+# Release jobs
+############################################################
+
+# Generates static Go package docs
+# generate go package docs:
+#   extends: .generate_go_package_docs
+#   rules:
+#     - if: "$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH"
+#       when: never
+#     - !reference [.standard_go_rules, rules]
+
+# # Deploys package docs and coverage report
+# pages:
+#   stage: Deploy
+#   needs:
+#     - generate go package docs
+#     - golang unit test
+#   rules: !reference ["generate go package docs", rules]
+#   image: cgr.dev/chainguard/wolfi-base
+#   script:
+#     - mkdir public
+#     - cp -r ci/docs/go public/go
+#     - cp coverage.html public
+#     - echo "Pages accessible through ${CI_PAGES_URL}/${PAGES_PREFIX}"
+#   artifacts:
+#     paths:
+#       - public
+
+# Release needs csi-bottle to run
+# "csi-bottle gendocs" from release.sh
+semantic release:
+  dependencies:
+    - build binaries

@@ -1,0 +1,89 @@
+# Default values for csi-bottle.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: reg.git.act3-ace.com/ace/data/csi/csi-bottle
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.6.11"
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+# registrar sidecar
+registrar:
+  image:
+    repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+    pullPolicy: IfNotPresent
+    tag: v2.10.1
+  resources: {}
+# liveness probe sidecar
+liveness:
+  image:
+    repository: registry.k8s.io/sig-storage/livenessprobe
+    pullPolicy: IfNotPresent
+    tag: v2.12.0
+  resources: {}
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+nodeSelector: {}
+tolerations:
+  - operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/disk-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/memory-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/pid-pressure
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/unschedulable
+    operator: Exists
+  - effect: NoSchedule
+    key: node.kubernetes.io/network-unavailable
+    operator: Exists
+affinity: {}
+priorityClassName: system-node-critical
+# verbosity level for logging (higher numbers are more verbose)
+verbosity: 4
+# all storage is put under this directory
+storageDir: /var/lib/ace/data
+# cache pruning parameters
+prune:
+  size: 100Gi
+  period: 24h
+# Telemetry server URL
+telemetry:
+prometheus:
+  serviceMonitor:
+    enabled: no
+    # change the labels to match the prometheses serviceMonitorSelector
+    labels:

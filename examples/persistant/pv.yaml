@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: csi-pv
+  labels:
+    type: local
+spec:
+  storageClassName: csi-bottle-sc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  csi:
+    driver: bottle.csi.act3-ace.io
+    claimRef: sdsdfadsf
+    volumeHandle: foo
+    volumeAttributes:
+      # Specify your bottle here.
+      bottle: us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6
+      selector: "subset=train,component=image|usage=true"

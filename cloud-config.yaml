@@ -1,0 +1,9 @@
+#cloud-config
+
+# apply updates using apt
+package_update: true
+package_upgrade: true
+
+# Install standard packages
+packages:
+  - tree

@@ -1,0 +1,11 @@
+defaultBaseImage: gcr.io/distroless/static-debian12:debug
+
+builds:
+  - id: "csi-bottle"
+    main: "./cmd/csi-bottle"
+    flags:
+      - -trimpath
+    ldflags:
+      - -X main.version={{.Env.VERSION}}
+      - -s -w # strip symbols (make the binary smaller)
+      - -extldflags "-static"

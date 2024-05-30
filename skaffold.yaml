@@ -1,0 +1,33 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: csi-bottle
+build:
+  artifacts:
+    - image: ace/data/csi/csi-bottle
+      ko:
+        fromImage: gcr.io/distroless/static-debian12:debug
+        dependencies:
+          paths:
+            - pkg/**
+            - cmd/csi-bottle/**
+        main: ./cmd/csi-bottle
+manifests:
+  helm:
+    releases:
+      - name: csi-bottle
+        chartPath: charts/csi-bottle
+        setValueTemplates:
+          image.repository: '{{.IMAGE_REPO}}'
+          image.tag: '{{.IMAGE_TAG}}@{{.IMAGE_DIGEST}}'
+deploy:
+  helm: {}
+profiles:
+  - name: dev
+    activation:
+      - command: dev
+    patches:
+      - op: add
+        path: /manifests/helm/releases/0/setValues
+        value:
+          verbosity: 8

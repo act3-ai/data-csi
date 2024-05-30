@@ -1,0 +1,1 @@
+Run `helm test {{ .Release.Name }}` to test a pod mounting a bottle.

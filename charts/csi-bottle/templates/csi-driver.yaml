@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: CSIDriver
+metadata:
+  name: bottle.csi.act3-ace.io
+spec:
+  attachRequired: false
+  podInfoOnMount: true
+  volumeLifecycleModes:
+  - Ephemeral
+  # - Persistent

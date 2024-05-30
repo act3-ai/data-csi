@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://json.schemastore.org/semantic-release.json
+branches:
+  - main # default branch
+  # Uncomment to add a prerelease channel using the "beta" branch
+  - name: beta
+    channel: beta
+    prerelease: true
+plugins:
+  # reads "fix:"/"feat:" commits
+  - "@semantic-release/commit-analyzer"
+  # generates release notes
+  - "@semantic-release/release-notes-generator"
+  # generates CHANGELOG.md
+  - "@semantic-release/changelog"
+  # runs a script
+  - - "@semantic-release/exec"
+    - prepareCmd: ./release.sh ${nextRelease.version} ci-dist/csi-bottle/linux/amd64/bin/csi-bottle
+  # makes a commit with generated release assets
+  - - "@semantic-release/git"
+    - assets:
+        - CHANGELOG.md
+        - charts/csi-bottle/Chart.yaml
+        - charts/csi-bottle/values.yaml
+        - VERSION
+        - docs/cli
+        - docs/api
+      message: "chore(release): ${nextRelease.version}  \n\n${nextRelease.notes}"
