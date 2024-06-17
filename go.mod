@@ -9,10 +9,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/kubernetes-csi/csi-lib-utils v0.18.0
 	github.com/prometheus/client_golang v1.19.1
-	github.com/spf13/cobra v1.8.0
-	gitlab.com/act3-ai/asce/data/telemetry v0.0.0-20240530154448-e4e8996474af
-	gitlab.com/act3-ai/asce/data/tool v0.0.0-20240530164649-25a2156ad056
-	gitlab.com/act3-ai/asce/go-common v0.0.0-20240515134838-75dff81e3d47
+	github.com/spf13/cobra v1.8.1
 	golang.org/x/sync v0.7.0
 	google.golang.org/grpc v1.65.0
 	k8s.io/api v0.30.1
@@ -29,7 +26,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/djherbis/atime v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
