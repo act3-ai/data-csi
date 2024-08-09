@@ -9,6 +9,8 @@ golang unit test:
     KUBERNETES_CPU_LIMIT: 16
     KUBERNETES_MEMORY_REQUEST: 8Gi
     KUBERNETES_MEMORY_LIMIT: 64Gi
+    GOMAXPROCS: 16
+    GOMEMLIMIT: 68719476736 # 64*(2^30)
 
 govulncheck:
   variables:
@@ -16,6 +18,8 @@ govulncheck:
     KUBERNETES_CPU_LIMIT: 8
     KUBERNETES_MEMORY_REQUEST: 4Gi
     KUBERNETES_MEMORY_LIMIT: 12Gi
+    GOMAXPROCS: 8
+    GOMEMLIMIT: 12884901888 # 12 *(2^30)
 
 ############################################################
 # Build jobs
@@ -36,6 +40,15 @@ build fips:
   extends: .go build fips
   variables:
     EXECUTABLE: "csi-bottle"
+
+build with ko:
+  variables:
+    KUBERNETES_CPU_REQUEST: 4
+    KUBERNETES_CPU_LIMIT: 8
+    KUBERNETES_MEMORY_REQUEST: 8Gi
+    KUBERNETES_MEMORY_LIMIT: 16Gi
+    GOMAXPROCS: 8
+    GOMEMLIMIT: 17179869184 # 16*(2^30)
 
 generate cli docs:
   stage: Release
