@@ -75,7 +75,7 @@ CONTROLLER_GEN_VERSION?=v0.15.0
 # renovate: datasource=go depName=github.com/elastic/crd-ref-docs
 CRD_REF_DOCS_VERSION?=v0.0.12
 # renovate: datasource=go depName=github.com/google/ko
-KO_VERSION?=v0.15.2
+KO_VERSION?=v0.16.0
 # renovate: datasource=go depName=github.com/golangci/golangci-lint
 GOLANGCILINT_VERSION?=v1.58.2
 
