@@ -71,7 +71,7 @@ lint: tool/golangci-lint
 ############################################################
 
 # renovate: datasource=go depName=sigs.k8s.io/controller-tools
-CONTROLLER_GEN_VERSION?=v0.15.0
+CONTROLLER_GEN_VERSION?=v0.16.0
 # renovate: datasource=go depName=github.com/elastic/crd-ref-docs
 CRD_REF_DOCS_VERSION?=v0.1.0
 # renovate: datasource=go depName=github.com/google/ko
