@@ -362,7 +362,7 @@ func (ns *NodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	log.InfoContext(ctx, "Mounting", "fsType", fsType, "readOnly", readOnly, "attributes", attrib, "mountFlags", mountFlags)
 
-	options := []string{"bind"}
+	options := []string{"bind", "noexec"}
 	if readOnly {
 		options = append(options, "ro")
 	}
