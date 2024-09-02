@@ -30,7 +30,7 @@ liveness:
   image:
     repository: registry.k8s.io/sig-storage/livenessprobe
     pullPolicy: IfNotPresent
-    tag: v2.12.0
+    tag: v2.14.0
   resources: {}
 imagePullSecrets: []
 nameOverride: ""
