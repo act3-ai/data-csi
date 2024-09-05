@@ -5,7 +5,7 @@ go 1.22.5
 toolchain go1.23.0
 
 require (
-	git.act3-ace.com/ace/data/telemetry v0.21.3
+	git.act3-ace.com/ace/data/telemetry v1.0.0
 	git.act3-ace.com/ace/data/tool v1.12.0
 	git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d
 	github.com/container-storage-interface/spec v1.9.0
@@ -26,7 +26,7 @@ require (
 
 require (
 	git.act3-ace.com/ace/data/schema v1.2.13 // indirect
-	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240806202638-22ce07de68bc // indirect
+	git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f // indirect
 	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
 	github.com/MakeNowJust/heredoc/v2 v2.0.1 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
