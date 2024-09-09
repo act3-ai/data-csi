@@ -8,7 +8,7 @@ require (
 	git.act3-ace.com/ace/data/telemetry v1.0.0
 	git.act3-ace.com/ace/data/tool v1.12.0
 	git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d
-	github.com/container-storage-interface/spec v1.9.0
+	github.com/container-storage-interface/spec v1.10.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0

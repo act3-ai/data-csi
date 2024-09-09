@@ -49,6 +49,8 @@ type NodeServer struct {
 
 	recorder record.EventRecorder
 	log      *slog.Logger
+
+	csi.UnimplementedNodeServer // forward compatibility
 }
 
 // NewNodeServer creates a new node server with a nodeID.
@@ -177,7 +179,7 @@ func (ns *NodeServer) stageVolume(ctx context.Context, stagingPath string, volum
 	}
 
 	// This logger is a reference to ace-dt's logger
-	log := ns.log.With("bottle", btlRef, "selectors", labelSelectors, "staging path", stagingPath)
+	log := ns.log.With("bottle", btlRef, "selectors", labelSelectors, "stagingPath", stagingPath)
 	log.InfoContext(ctx, "Pulling bottle")
 
 	log.DebugContext(ctx, "Parameters", "volumeContext", volumeContext)
@@ -321,7 +323,7 @@ func (ns *NodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	stagingPath := req.GetStagingTargetPath()
 
-	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID)
+	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
 
 	if req.GetVolumeContext()["csi.storage.k8s.io/ephemeral"] == "true" {
 		// we need to make our own stagingPath
@@ -389,7 +391,7 @@ func (ns *NodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 		return nil, status.Error(codes.InvalidArgument, "Target path missing in request")
 	}
 
-	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID)
+	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
 
 	// Unmount only if the target path is really a mount point.
 	if notMnt, err := mount.IsNotMountPoint(ns.mounter, targetPath); err != nil {
@@ -457,14 +459,4 @@ func (ns *NodeServer) NodeUnstageVolume(ctx context.Context, req *csi.NodeUnstag
 	}
 
 	return &csi.NodeUnstageVolumeResponse{}, nil
-}
-
-// NodeExpandVolume is only implemented so the driver can be used for e2e testing.
-func (ns *NodeServer) NodeExpandVolume(ctx context.Context, req *csi.NodeExpandVolumeRequest) (*csi.NodeExpandVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// NodeGetVolumeStats is unimplemented.
-func (ns *NodeServer) NodeGetVolumeStats(ctx context.Context, req *csi.NodeGetVolumeStatsRequest) (*csi.NodeGetVolumeStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
 }

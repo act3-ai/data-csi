@@ -150,7 +150,7 @@ func (d *Driver) Run(ctx context.Context) error {
 				// This can take a while
 				e := d.prune(gctx)
 				if e != nil {
-					log.Error(fmt.Errorf("Failed to prune cache: %w", err).Error())
+					log.Error(fmt.Errorf("failed to prune cache: %w", err).Error())
 					// just continue on as this is not fatal
 					continue
 				}

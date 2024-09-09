@@ -12,6 +12,8 @@ type IdentityServer struct {
 	name    string
 	version string
 	log     *slog.Logger
+
+	csi.UnimplementedIdentityServer // forward compatibility
 }
 
 // NewIdentityServer create a new identity server with a given name and version.
