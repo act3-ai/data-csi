@@ -5,7 +5,7 @@ go 1.22.5
 toolchain go1.23.1
 
 require (
-	git.act3-ace.com/ace/data/telemetry v1.0.0
+	git.act3-ace.com/ace/data/telemetry v1.0.1
 	git.act3-ace.com/ace/data/tool v1.12.0
 	git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d
 	github.com/container-storage-interface/spec v1.10.0
@@ -67,9 +67,10 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/notaryproject/notation-core-go v1.0.3 // indirect
-	github.com/notaryproject/notation-go v1.1.1 // indirect
+	github.com/notaryproject/notation-core-go v1.1.0 // indirect
+	github.com/notaryproject/notation-go v1.2.0 // indirect
 	github.com/notaryproject/notation-plugin-framework-go v1.0.0 // indirect
+	github.com/notaryproject/tspclient-go v0.2.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
@@ -82,13 +83,13 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	gitlab.com/act3-ai/asce/data/schema v0.0.0-20240515135820-820f65b6a194 // indirect
 	go.etcd.io/bbolt v1.3.10 // indirect
-	golang.org/x/crypto v0.25.0 // indirect
-	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/term v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sys v0.24.0 // indirect
+	golang.org/x/term v0.23.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
