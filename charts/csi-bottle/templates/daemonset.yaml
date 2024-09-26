@@ -160,6 +160,9 @@ spec:
               mountPropagation: Bidirectional
             - name: storage-dir
               mountPath: /data
+            {{ if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end}}
 
       volumes:
         - name: plugin-dir
@@ -178,3 +181,6 @@ spec:
           hostPath:
             path: {{ .Values.storageDir }}
             type: DirectoryOrCreate
+        {{ if .Values.extraVolumes }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end}}
