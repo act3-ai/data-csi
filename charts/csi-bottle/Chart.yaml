@@ -2,8 +2,8 @@ apiVersion: v2
 name: csi-bottle
 description: CSI driver for data bottles
 type: application
-version: 0.6.11
-appVersion: 0.6.11
+version: 0.6.14
+appVersion: 0.6.14
 sources:
   - https://gitlab.com/act3-ai/asce/data/csi
 maintainers:
