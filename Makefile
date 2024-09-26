@@ -77,7 +77,7 @@ CRD_REF_DOCS_VERSION?=v0.1.0
 # renovate: datasource=go depName=github.com/google/ko
 KO_VERSION?=v0.16.0
 # renovate: datasource=go depName=github.com/golangci/golangci-lint
-GOLANGCILINT_VERSION?=v1.60.3
+GOLANGCILINT_VERSION?=v1.61.0
 
 # renovate: datasource=go depName=github.com/rexray/gocsi
 CSC_VERSION?=v1.2.2
