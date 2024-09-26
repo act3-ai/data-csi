@@ -3,6 +3,9 @@
 export ver=$1
 echo "$ver" >VERSION
 
+yq e '(.version = env(ver)) | (.appVersion = env(ver))' -i charts/csi-bottle/Chart.yaml
+yq e '.image.tag = "v" + env(ver)' -i charts/csi-bottle/values.yaml
+
 tool=$2
 
 rm docs/cli/*
