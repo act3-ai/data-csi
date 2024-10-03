@@ -4,8 +4,8 @@ git.act3-ace.com/ace/data/schema v1.2.13 h1:F6u7KCF1WFrkO1zQuCA4PiYzIh6kamfX9XYn
 git.act3-ace.com/ace/data/schema v1.2.13/go.mod h1:6GJ5yd02my+Fx+TGfkgHDDKcC3ueMsSB0Et+FvKHbq4=
 git.act3-ace.com/ace/data/telemetry v1.0.1 h1:9MJ/bGC0bq8O/F1lv45mBf/ORBthaSB0+Tn1HAT0eIw=
 git.act3-ace.com/ace/data/telemetry v1.0.1/go.mod h1:Dd0SRCJK/HBo9Apz3loGt0I3bDpYSktNZYNaHOPOlJU=
-git.act3-ace.com/ace/data/tool v1.13.0 h1:h4IFInmrTTgcnKBMo3sYh142f5q9ev8Nn3QLqhVf1qc=
-git.act3-ace.com/ace/data/tool v1.13.0/go.mod h1:XvD1Lq9ukU3iFWn7wuTZpoWilYoFVqD/Z/EbCNIqHa8=
+git.act3-ace.com/ace/data/tool v1.13.1 h1:wqibFGQ2GGmjrSihtbcUoE5Ob3lx0xp468R3MC17dgs=
+git.act3-ace.com/ace/data/tool v1.13.1/go.mod h1:tL2weC5W7mQz3WYQOuc/1bpXIpzB5eZRsYtkZVwpWeo=
 git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d h1:ou5/uM7NF6YEfArm3wnCMfZri6+lHYDjogKJNNTrfvs=
 git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d/go.mod h1:gVgXMJokXq/GAmW07OdzNDQvKHCiYnBvk0+seOBadHs=
 git.act3-ace.com/ace/hub/api/v6 v6.0.0-20240813105127-9a831192ed1f h1:wBrwWNI2Z/45zSSRTcX+rauycK3/Nb13h5qnY6pXKGA=
@@ -47,6 +47,8 @@ github.com/emicklei/go-restful/v3 v3.12.0 h1:y2DdzBAURM29NFF94q6RaY4vjIH1rtwDapw
 github.com/emicklei/go-restful/v3 v3.12.0/go.mod h1:6n3XBCmQQb25CM2LCACGz8ukIrRry+4bhvbpWn3mrbc=
 github.com/fatih/color v1.17.0 h1:GlRw1BRJxkpqUCBKzKOw098ed57fEsKeNjpTe3cSjK4=
 github.com/fatih/color v1.17.0/go.mod h1:YZ7TlrGPkiz6ku9fK3TLD/pl3CpsiFyu8N92HLgmosI=
+github.com/fortytw2/leaktest v1.3.0 h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8vw=
+github.com/fortytw2/leaktest v1.3.0/go.mod h1:jDsjWgpAGjm2CA7WthBh/CdZYEPF31XHquHwclZch5g=
 github.com/fxamacker/cbor/v2 v2.7.0 h1:iM5WgngdRBanHcxugY4JySA0nk1wZorNOpTgCMedv5E=
 github.com/fxamacker/cbor/v2 v2.7.0/go.mod h1:pxXPTn3joSm21Gbwsv0w9OSA2y1HFR9qXEeXQVeNoDQ=
 github.com/go-asn1-ber/asn1-ber v1.5.5 h1:MNHlNMBDgEKD4TcKr36vQN68BA00aDfjIt3/bD50WnA=
@@ -137,8 +139,8 @@ github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnr
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
-github.com/klauspost/compress v1.17.9 h1:6KIumPrER1LHsvBVuDa0r5xaG0Es51mhhB9BQB2qeMA=
-github.com/klauspost/compress v1.17.9/go.mod h1:Di0epgTjJY877eYKx5yC51cX2A2Vl2ibi7bDH9ttBbw=
+github.com/klauspost/compress v1.17.10 h1:oXAz+Vh0PMUvJczoi+flxpnBEPxoER1IaAnU/NMPtT0=
+github.com/klauspost/compress v1.17.10/go.mod h1:pMDklpSncoRMuLFrf1W9Ss9KT+0rH90U12bZKk7uwG0=
 github.com/kopoli/go-terminal-size v0.0.0-20170219200355-5c97524c8b54 h1:0SMHxjkLKNawqUjjnMlCtEdj6uWZjv0+qDZ3F6GOADI=
 github.com/kopoli/go-terminal-size v0.0.0-20170219200355-5c97524c8b54/go.mod h1:bm7MVZZvHQBfqHG5X59jrRE/3ak6HvK+/Zb6aZhLR2s=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=

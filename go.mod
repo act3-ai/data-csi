@@ -6,7 +6,7 @@ toolchain go1.23.1
 
 require (
 	git.act3-ace.com/ace/data/telemetry v1.0.1
-	git.act3-ace.com/ace/data/tool v1.13.0
+	git.act3-ace.com/ace/data/tool v1.13.1
 	git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d
 	github.com/container-storage-interface/spec v1.10.0
 	github.com/dustin/go-humanize v1.0.1
@@ -59,7 +59,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
+	github.com/klauspost/compress v1.17.10 // indirect
 	github.com/kopoli/go-terminal-size v0.0.0-20170219200355-5c97524c8b54 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
