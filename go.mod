@@ -2,7 +2,7 @@ module gitlab.com/act3-ai/asce/data/csi
 
 go 1.22.5
 
-toolchain go1.23.1
+toolchain go1.23.2
 
 require (
 	git.act3-ace.com/ace/data/telemetry v1.0.1
