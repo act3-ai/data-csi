@@ -177,6 +177,8 @@ func (d *Driver) Run(ctx context.Context) error {
 
 // prune will prune the blob cache.
 func (d *Driver) prune(ctx context.Context) error {
-	cacheManager := cache.NewBottleCachePruner(d.ns.cacheDir)
-	return cacheManager.Prune(ctx, int64(d.pruneSize))
+	if err := cache.Prune(ctx, d.ns.cacheDir, int64(d.pruneSize)); err != nil {
+		return fmt.Errorf("pruning cache: %w", err)
+	}
+	return nil
 }
