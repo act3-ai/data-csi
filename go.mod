@@ -6,7 +6,7 @@ toolchain go1.23.2
 
 require (
 	git.act3-ace.com/ace/data/telemetry v1.0.1
-	git.act3-ace.com/ace/data/tool v1.13.1
+	git.act3-ace.com/ace/data/tool v1.13.2
 	git.act3-ace.com/ace/go-common v0.0.0-20240319120227-e77a013aa92d
 	github.com/container-storage-interface/spec v1.10.0
 	github.com/dustin/go-humanize v1.0.1
