@@ -87,3 +87,5 @@ prometheus:
     enabled: no
     # change the labels to match the prometheses serviceMonitorSelector
     labels:
+extraPodLabels:
+  # dictionary of labels to add to the pod

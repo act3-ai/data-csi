@@ -8,6 +8,9 @@ spec:
   selector:
     matchLabels:
       {{- include "csi-bottle.selectorLabels" . | nindent 6 }}
+      {{ with .Values.extraPodLabels}}
+      {{- toYaml .Values.extraPodLabels | nindent 6 }}
+      {{- end }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -16,6 +19,9 @@ spec:
     {{- end }}
       labels:
         {{- include "csi-bottle.selectorLabels" . | nindent 8 }}
+        {{ with .Values.extraPodLabels}}
+        {{- toYaml .Values.extraPodLabels | nindent 8 }}
+        {{- end }}
     spec:
       # hostNetwork: true # KMT - we should not need hostNetwork
       priorityClassName: {{ .Values.priorityClassName }}
