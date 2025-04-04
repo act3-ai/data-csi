@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 image:
-  repository: reg.git.act3-ace.com/ace/data/csi/csi-bottle
+  repository: registry.gitlab.com/act3-ai/asce/data/csi/csi-bottle
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.6.11"
+  tag: "v0.6.15"
 resources: {}
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little
@@ -23,14 +23,14 @@ registrar:
   image:
     repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
     pullPolicy: IfNotPresent
-    tag: v2.10.1
+    tag: v2.12.0
   resources: {}
 # liveness probe sidecar
 liveness:
   image:
     repository: registry.k8s.io/sig-storage/livenessprobe
     pullPolicy: IfNotPresent
-    tag: v2.12.0
+    tag: v2.14.0
   resources: {}
 imagePullSecrets: []
 nameOverride: ""
@@ -87,3 +87,5 @@ prometheus:
     enabled: no
     # change the labels to match the prometheses serviceMonitorSelector
     labels:
+extraPodLabels:
+# dictionary of labels to add to the pod

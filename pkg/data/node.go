@@ -24,7 +24,7 @@ import (
 	"oras.land/oras-go/v2/registry/remote/auth"
 	credstore "oras.land/oras-go/v2/registry/remote/credentials"
 
-	telemv1alpha1 "gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/tool/pkg/conf"
 	telem "gitlab.com/act3-ai/asce/data/tool/pkg/telemetry"
 	tbottle "gitlab.com/act3-ai/asce/data/tool/pkg/transfer/bottle"
@@ -37,7 +37,7 @@ type NodeServer struct {
 	nodeID              string
 	ephemeralStagingDir string
 	cacheDir            string
-	telemHosts          []telemv1alpha1.Location
+	telemHosts          []telemv1alpha2.Location
 	telemUserName       string
 
 	mounter mount.Interface
@@ -49,10 +49,12 @@ type NodeServer struct {
 
 	recorder record.EventRecorder
 	log      *slog.Logger
+
+	csi.UnimplementedNodeServer // forward compatibility
 }
 
 // NewNodeServer creates a new node server with a nodeID.
-func NewNodeServer(name, nodeID, storageDir string, telemHosts []telemv1alpha1.Location,
+func NewNodeServer(name, nodeID, storageDir string, telemHosts []telemv1alpha2.Location,
 	telemUserName string, log *slog.Logger,
 ) *NodeServer {
 	if name == "" {
@@ -177,7 +179,7 @@ func (ns *NodeServer) stageVolume(ctx context.Context, stagingPath string, volum
 	}
 
 	// This logger is a reference to ace-dt's logger
-	log := ns.log.With("bottle", btlRef, "selectors", labelSelectors, "staging path", stagingPath)
+	log := ns.log.With("bottle", btlRef, "selectors", labelSelectors, "stagingPath", stagingPath)
 	log.InfoContext(ctx, "Pulling bottle")
 
 	log.DebugContext(ctx, "Parameters", "volumeContext", volumeContext)
@@ -245,7 +247,7 @@ func (ns *NodeServer) stageVolume(ctx context.Context, stagingPath string, volum
 
 	// resolve with telemetry
 	log.InfoContext(ctx, "resolivng bottle reference with telemetry", "btlRef", btlRef)
-	telemAdapt := telem.NewAdapter(ns.telemHosts, ns.telemUserName)
+	telemAdapt := telem.NewAdapter(ctx, ns.telemHosts, ns.telemUserName)
 	src, desc, event, err := telemAdapt.ResolveWithTelemetry(pullCtx, btlRef, config, pullOpts.TransferOptions)
 	if err != nil {
 		return fmt.Errorf("resolving bottle reference with telemetry: %w", err)
@@ -321,7 +323,7 @@ func (ns *NodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	stagingPath := req.GetStagingTargetPath()
 
-	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID)
+	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
 
 	if req.GetVolumeContext()["csi.storage.k8s.io/ephemeral"] == "true" {
 		// we need to make our own stagingPath
@@ -362,7 +364,7 @@ func (ns *NodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	log.InfoContext(ctx, "Mounting", "fsType", fsType, "readOnly", readOnly, "attributes", attrib, "mountFlags", mountFlags)
 
-	options := []string{"bind"}
+	options := []string{"bind", "noexec"}
 	if readOnly {
 		options = append(options, "ro")
 	}
@@ -389,7 +391,7 @@ func (ns *NodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 		return nil, status.Error(codes.InvalidArgument, "Target path missing in request")
 	}
 
-	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID)
+	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
 
 	// Unmount only if the target path is really a mount point.
 	if notMnt, err := mount.IsNotMountPoint(ns.mounter, targetPath); err != nil {
@@ -457,14 +459,4 @@ func (ns *NodeServer) NodeUnstageVolume(ctx context.Context, req *csi.NodeUnstag
 	}
 
 	return &csi.NodeUnstageVolumeResponse{}, nil
-}
-
-// NodeExpandVolume is only implemented so the driver can be used for e2e testing.
-func (ns *NodeServer) NodeExpandVolume(ctx context.Context, req *csi.NodeExpandVolumeRequest) (*csi.NodeExpandVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// NodeGetVolumeStats is unimplemented.
-func (ns *NodeServer) NodeGetVolumeStats(ctx context.Context, req *csi.NodeGetVolumeStatsRequest) (*csi.NodeGetVolumeStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
 }

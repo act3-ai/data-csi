@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"gitlab.com/act3-ai/asce/data/csi/pkg/data"
-	telemv1alpha1 "gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/go-common/pkg/config"
 	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
 	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
@@ -39,12 +39,12 @@ func NewServeCmd(info version.Info) *cobra.Command {
 			}
 			log.Info("Prune config", "size", pruneSize, "period", prunePeriod)
 
-			var telemHosts []telemv1alpha1.Location
+			var telemHosts []telemv1alpha2.Location
 			var telemUserName string
 			// TODO support multiple telemetry servers and all authentication options
 			if telemetryURL != "" {
 				log.Info("Using telemetry", "url", telemetryURL)
-				telemHosts = append(telemHosts, telemv1alpha1.Location{URL: redact.SecretURL(telemetryURL)})
+				telemHosts = append(telemHosts, telemv1alpha2.Location{URL: redact.SecretURL(telemetryURL)})
 				telemUserName = "csi-driver"
 			} else {
 				log.Info("WARNING: Not using a telemetry server.  Consider configuring one with --telemetry.")

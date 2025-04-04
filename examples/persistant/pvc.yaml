@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: csi-pvc
   annotations:
-    bottle.csi.act3-ace.io/bottle: us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6
+    bottle.csi.act3-ace.io/bottle: ghcr.io/nathan-joslin/bottles/mnist:v1.7
     bottle.csi.act3-ace.io/selector: "subset=train,component=image|usage=true"
 spec:
   accessModes:
