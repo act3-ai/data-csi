@@ -93,16 +93,16 @@ linters:
         - .Lstat(
         - .Close()
         - .WalkDir(
-        - git.act3-ace.com/ace/data/telemetry/
+        - gitlab.com/act3-ai/asce/data/telemetry/
         - .ExecuteContext(
         - (*golang.org/x/sync/errgroup.Group).Wait()
         - status.Error(
       ignore-sig-regexps:
         - fmt\..?(P|p)rint.*\(
-        - \(git.act3-ace.com/ace/data/tool/pkg/.*
+        - \(gitlab.com/act3-ai/asce//data/tool/pkg/.*
       ignore-package-globs:
         - encoding/*
-        - git.act3-ace.com/*
+        - gitlab.com/act3-ai/*
   exclusions:
     generated: lax
     presets:
@@ -119,7 +119,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - git.act3-ace.com/ace
+        - gitlab.com/act3-ai/asce
   exclusions:
     generated: lax
     paths:
