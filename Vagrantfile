@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/jammy64"
+  config.vm.box = "generic/ubuntu2204"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -28,9 +28,14 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
-  config.vm.network "forwarded_port", guest: 39000, host: 39000, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 10000, host: 10000, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 9102, host: 9102, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 39000, host: 39000, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 10000, host: 10000, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 9102, host: 9102, host_ip: "127.0.0.1"
+  
+  config.vm.provider :libvirt do |libvirt|
+    # Enable forwarding of forwarded_port with id 'ssh'.
+    libvirt.forward_ssh_port = true
+  end
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -68,10 +73,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get install -y tree
+    mkdir /tmp/csi
     
-    wget --no-verbose https://go.dev/dl/go1.19.3.linux-amd64.tar.gz
-    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz
+    wget --no-verbose https://go.dev/dl/go1.24.1.linux-amd64.tar.gz
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz
     GOPATH=/opt/go PATH=$PATH:/usr/local/go/bin go install github.com/go-delve/delve/cmd/dlv@latest
     echo 'export PATH=/opt/go/bin:$PATH:/usr/local/go/bin' > /etc/profile.d/go.sh
   SHELL
+  config.vm.provision "file", source: "bin/csi-bottle-linux-amd64-test", destination: "csi-bottle"
+  # config.vm.provision "file", source: ".kubeconfig.yaml", destination: ".kubeconfig.yaml"
 end

@@ -17,6 +17,8 @@ type ControllerServer struct {
 	nodeID  string
 	volumes sync.Map
 	log     *slog.Logger
+
+	csi.UnimplementedControllerServer // forward compatibility
 }
 
 // NewControllerServer create a new CSi compliant controller.
@@ -150,11 +152,6 @@ func (cs *ControllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 	return &csi.DeleteVolumeResponse{}, nil
 }
 
-// ListVolumes implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ListVolumes(ctx context.Context, req *csi.ListVolumesRequest) (*csi.ListVolumesResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
 // ValidateVolumeCapabilities checks whether the volume capabilities requested are supported.
 func (cs *ControllerServer) ValidateVolumeCapabilities(ctx context.Context, req *csi.ValidateVolumeCapabilitiesRequest) (*csi.ValidateVolumeCapabilitiesResponse, error) {
 
@@ -195,49 +192,4 @@ func (cs *ControllerServer) ValidateVolumeCapabilities(ctx context.Context, req 
 			Parameters:    req.GetParameters(),
 		},
 	}, nil
-}
-
-// ControllerExpandVolume implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ControllerExpandVolume(ctx context.Context, req *csi.ControllerExpandVolumeRequest) (*csi.ControllerExpandVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// ControllerPublishVolume implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ControllerPublishVolume(ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// ControllerUnpublishVolume implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ControllerUnpublishVolume(ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// GetCapacity implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) GetCapacity(ctx context.Context, req *csi.GetCapacityRequest) (*csi.GetCapacityResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// CreateSnapshot implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) CreateSnapshot(ctx context.Context, req *csi.CreateSnapshotRequest) (*csi.CreateSnapshotResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// DeleteSnapshot implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) DeleteSnapshot(ctx context.Context, req *csi.DeleteSnapshotRequest) (*csi.DeleteSnapshotResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// ListSnapshots implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ListSnapshots(ctx context.Context, req *csi.ListSnapshotsRequest) (*csi.ListSnapshotsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// ControllerGetVolume implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ControllerGetVolume(ctx context.Context, req *csi.ControllerGetVolumeRequest) (*csi.ControllerGetVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
-}
-
-// ControllerModifyVolume implements csi.ControllerServer (unimplemented).
-func (cs *ControllerServer) ControllerModifyVolume(context.Context, *csi.ControllerModifyVolumeRequest) (*csi.ControllerModifyVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
 }

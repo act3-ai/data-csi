@@ -19,7 +19,7 @@ import (
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 
-	telemv1alpha1 "gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/tool/pkg/cache"
 )
 
@@ -28,7 +28,7 @@ type Driver struct {
 	endpoint      string
 	pruneSize     uint64
 	prunePeriod   time.Duration
-	telemHosts    []telemv1alpha1.Location
+	telemHosts    []telemv1alpha2.Location
 	telemUserName string
 	log           *slog.Logger
 
@@ -41,7 +41,7 @@ type Driver struct {
 
 // NewDriver creates a new CSI driver.
 func NewDriver(name, nodeID, version, endpoint, storageDir string,
-	pruneSize uint64, prunePeriod time.Duration, telemHosts []telemv1alpha1.Location,
+	pruneSize uint64, prunePeriod time.Duration, telemHosts []telemv1alpha2.Location,
 	telemUserName string, log *slog.Logger,
 ) *Driver {
 	log.Info("Creating driver",
@@ -150,7 +150,7 @@ func (d *Driver) Run(ctx context.Context) error {
 				// This can take a while
 				e := d.prune(gctx)
 				if e != nil {
-					log.Error(fmt.Errorf("Failed to prune cache: %w", err).Error())
+					log.Error(fmt.Errorf("failed to prune cache: %w", err).Error())
 					// just continue on as this is not fatal
 					continue
 				}
@@ -177,6 +177,8 @@ func (d *Driver) Run(ctx context.Context) error {
 
 // prune will prune the blob cache.
 func (d *Driver) prune(ctx context.Context) error {
-	cacheManager := cache.NewBottleCachePruner(d.ns.cacheDir)
-	return cacheManager.Prune(ctx, int64(d.pruneSize))
+	if err := cache.Prune(ctx, d.ns.cacheDir, int64(d.pruneSize)); err != nil {
+		return fmt.Errorf("pruning cache: %w", err)
+	}
+	return nil
 }

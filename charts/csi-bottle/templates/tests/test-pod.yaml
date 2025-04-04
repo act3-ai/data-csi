@@ -23,6 +23,6 @@ spec:
       driver: bottle.csi.act3-ace.io
       volumeAttributes:
         # Specify your bottle here.
-        bottle: us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6
+        bottle: ghcr.io/nathan-joslin/bottles/mnist:v1.7
         # Specify selectors to limit data
         selector: "subset=train,component=image|usage=true"
