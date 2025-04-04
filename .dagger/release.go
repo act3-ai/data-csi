@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"dagger.io/dagger/dag"
 	"github.com/sourcegraph/conc/pool"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -126,11 +127,11 @@ func (r *Release) Notes(ctx context.Context,
 	b := &strings.Builder{}
 	b.WriteString("| Charts |\n")
 	b.WriteString("| ----------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| reg.git.act3-ace.com/ace/data/csi/charts/csi-bottle:%s |", version)
+	fmt.Fprintf(b, "| registry.gitlab.com/ace/data/csi/charts/csi-bottle:%s |", version)
 
 	b.WriteString("| Images |\n")
 	b.WriteString("| --------------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| reg.git.act3-ace.com/ace/data/csi/csi-bottle:%s |\n", "v"+version)
+	fmt.Fprintf(b, "| registry.gitlab.com/ace/data/csi/csi-bottle:%s |\n", "v"+version)
 
 	b.WriteRune('\n')
 	b.WriteString("### ")

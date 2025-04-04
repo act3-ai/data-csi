@@ -68,7 +68,7 @@ sudo csi-bottle serve --endpoint tcp://127.0.0.1:10000 --nodeid CSINode -v 2
 This is **dangerous** because you have to run the driver as root and it needs to be able to run mount.  This is only possible when running in privileged mode so mounts happen on the host.
 
 ```bash
-podman run --privileged=true --rm -it -p 127.0.0.1:10000:10000 reg.git.act3-ace.com/ace/data/csi --endpoint tcp://0.0.0.0:10000 --nodeid CSINode -v 2
+podman run --privileged=true --rm -it -p 127.0.0.1:10000:10000 registry.gitlab.com/act3-ai/asce/data/csi --endpoint tcp://0.0.0.0:10000 --nodeid CSINode -v 2
 ```
 
 ### With Vagrant
@@ -178,9 +178,9 @@ csc -e tcp://127.0.0.1:10000 node unpublish evolume --with-spec-validation --tar
 Assuming you are already logged in using a credential helper we can extract the credentials with:
 
 ```shell
-echo "reg.git.act3-ace.com" | docker-credential-secretservice get | jq -r '(.Username)+":"+(.Secret) | @base64 as $CREDS | {"auths": {"reg.git.act3-ace.com": {"auth": $CREDS }}}' > test-auth.json
+echo "registry.gitlab.com" | docker-credential-secretservice get | jq -r '(.Username)+":"+(.Secret) | @base64 as $CREDS | {"auths": {"registry.gitlab.com": {"auth": $CREDS }}}' > test-auth.json
 
-VOLCON="--vol-context bottle=reg.git.act3-ace.com/ace/data/tool/bottle/mnist:v1.6"
+VOLCON="--vol-context bottle=registry.gitlab.com/ace/data/tool/bottle/mnist:v1.6"
 export X_CSI_SECRETS="\".dockerconfigjson=$(sed 's/"/\"\"/g' test-auth.json)\""
 csc -e tcp://127.0.0.1:10000 node publish evolume --with-spec-validation $VOLCON --vol-context csi.storage.k8s.io/ephemeral=true --cap $CAP --target-path /tmp/csi/target/somepod
 csc -e tcp://127.0.0.1:10000 node unpublish evolume --with-spec-validation --target-path /tmp/csi/target/somepod
@@ -231,7 +231,7 @@ kubectl delete -f examples/pod.yaml
 ##### With Auth
 
 ```shell
-kubectl create secret docker-registry test-secret --docker-server=reg.git.act3-ace.com --docker-username=DOCKER_USERNAME --docker-password=DOCKER_PASSWORD
+kubectl create secret docker-registry test-secret --docker-server=registry.gitlab.com --docker-username=DOCKER_USERNAME --docker-password=DOCKER_PASSWORD
 kubectl apply -f examples/pod-auth.yaml
 kubectl exec -it test-csi-auth -- ls -l /var/www/html
 kubectl delete -f examples/pod-auth.yaml
