@@ -12,7 +12,7 @@ require (
 	github.com/kubernetes-csi/csi-lib-utils v0.19.0
 	github.com/prometheus/client_golang v1.21.1
 	github.com/spf13/cobra v1.9.1
-	gitlab.com/act3-ai/asce/data/telemetry v0.0.0-20241206143956-d2f00f9f8903
+	gitlab.com/act3-ai/asce/data/telemetry/v3 v3.1.2
 	gitlab.com/act3-ai/asce/data/tool v1.15.9
 	gitlab.com/act3-ai/asce/go-common v0.0.0-20250331212520-16d3bdc00126
 	golang.org/x/sync v0.12.0
@@ -93,7 +93,6 @@ require (
 	github.com/zitadel/oidc/v3 v3.34.1 // indirect
 	github.com/zitadel/schema v1.3.0 // indirect
 	gitlab.com/act3-ai/asce/data/schema v1.2.15 // indirect
-	gitlab.com/act3-ai/asce/data/telemetry/v3 v3.1.2 // indirect
 	go.etcd.io/bbolt v1.4.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel v1.34.0 // indirect

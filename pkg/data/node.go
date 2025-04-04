@@ -24,7 +24,7 @@ import (
 	"oras.land/oras-go/v2/registry/remote/auth"
 	credstore "oras.land/oras-go/v2/registry/remote/credentials"
 
-	telemv1alpha1 "gitlab.com/act3-ai/asce/data/telemetry/pkg/apis/config.telemetry.act3-ace.io/v1alpha1"
+	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
 	"gitlab.com/act3-ai/asce/data/tool/pkg/conf"
 	telem "gitlab.com/act3-ai/asce/data/tool/pkg/telemetry"
 	tbottle "gitlab.com/act3-ai/asce/data/tool/pkg/transfer/bottle"
@@ -37,7 +37,7 @@ type NodeServer struct {
 	nodeID              string
 	ephemeralStagingDir string
 	cacheDir            string
-	telemHosts          []telemv1alpha1.Location
+	telemHosts          []telemv1alpha2.Location
 	telemUserName       string
 
 	mounter mount.Interface
@@ -54,7 +54,7 @@ type NodeServer struct {
 }
 
 // NewNodeServer creates a new node server with a nodeID.
-func NewNodeServer(name, nodeID, storageDir string, telemHosts []telemv1alpha1.Location,
+func NewNodeServer(name, nodeID, storageDir string, telemHosts []telemv1alpha2.Location,
 	telemUserName string, log *slog.Logger,
 ) *NodeServer {
 	if name == "" {
@@ -247,7 +247,7 @@ func (ns *NodeServer) stageVolume(ctx context.Context, stagingPath string, volum
 
 	// resolve with telemetry
 	log.InfoContext(ctx, "resolivng bottle reference with telemetry", "btlRef", btlRef)
-	telemAdapt := telem.NewAdapter(ns.telemHosts, ns.telemUserName)
+	telemAdapt := telem.NewAdapter(ctx, ns.telemHosts, ns.telemUserName)
 	src, desc, event, err := telemAdapt.ResolveWithTelemetry(pullCtx, btlRef, config, pullOpts.TransferOptions)
 	if err != nil {
 		return fmt.Errorf("resolving bottle reference with telemetry: %w", err)
