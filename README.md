@@ -47,7 +47,7 @@ spec:
       #   name: test-secret
       volumeAttributes:
         # Specify the bottle to pull
-        bottle: us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6
+        bottle: ghcr.io/nathan-joslin/bottles/mnist:v1.7
         # or by digest
         # bottle: bottle:sha256:1234...
         
@@ -144,7 +144,7 @@ Run the following:
 ```bash
 # The extra coma is needed.  The format is "mode,type[,fstype,mntflags]"
 CAP=SINGLE_NODE_WRITER,mount,
-VOLCON="--vol-context bottle=us-central1-docker.pkg.dev/aw-df16163b-7044-4662-93fa-ec0/public-down-auth-up/mnist:v1.6 --vol-context selector=subset=train"
+VOLCON="--vol-context bottle=ghcr.io/nathan-joslin/bottles/mnist:v1.7 --vol-context selector=subset=train"
 ```
 
 For an example by bottle ID (to test the telemetry server)

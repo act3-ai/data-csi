@@ -1,209 +1,128 @@
+version: "2"
 run:
-  # if you are daring, set this to true
   tests: true
-
 linters:
   enable:
-    - gofmt
     - bodyclose
-    - exhaustive
-    - dupl
-    - errorlint
-    - prealloc
-    - importas
-    - errorlint
-    - errname
-    - revive
-    - gocritic
-    - staticcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - typecheck
-    - unused
-    - misspell
-    - goimports
-    - tenv
-    # - gochecknoglobals
-    - gochecknoinits
-    # - gci
-    - usestdlibvars
-    - thelper
-    - nolintlint
-    - noctx
-    - wrapcheck
-    - gocognit
     - containedctx
     - contextcheck
-    - godot
-    - nosprintfhostport
-    # - depguard
-    # - exportloopref
-    - sloglint
     - copyloopvar
-
-linters-settings:
-  # importas:
-  # if set to `true`, force to use alias.
-  # no-unaliased: true
-  # List of aliases
-  # alias:
-  #   - pkg: github.com/opencontainers/go-digest
-  #     alias: digest
-
-  staticcheck:
-    # https://staticcheck.io/docs/options#checks
-    checks: ["all"]
-
-  revive:
-    ignore-generated-header: true
-    severity: warning
-    # enable-all-rules: true
-    # rules:
-    # - name: banned-characters
-    #   arguments: [""]
-    # - name: line-length-limit
-    #   severity: warning
-    #   arguments: [200]
-    # - name: function-result-limit
-    #   arguments: [4]
-    rules:
-      - name: atomic
-      # - name: line-length-limit
-      #   severity: warning
-      #   arguments: [120]
-      - name: unhandled-error
-        arguments:
-          - "fmt.Printf"
-          - "fmt.Println"
-          - "fmt.Print"
-          # - "fmt.Fprintf"
-          # - "fmt.Fprintln"
-          # - "fmt.Fprint"
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
-      - name: empty-block
-      - name: superfluous-else
-      # - name: unused-parameter
-      - name: unreachable-code
-      - name: redefines-builtin-id
-      - name: defer
-      - name: useless-break
-      - name: unexported-naming
-      # - name: cognitive-complexity
-      #   arguments: [35]
-      - name: use-any
-      - name: deep-exit
-      # - name: add-constant
-      - name: unnecessary-stmt
-      - name: modifies-value-receiver
-      # - name: constant-logical-expr
-      - name: call-to-gc
-      - name: import-shadowing
-
-  goimports:
-    # Put imports beginning with prefix after 3rd-party packages.
-    # It's a comma-separated list of prefixes.
-    # Default: ""
-    local-prefixes: gitlab.com/act3-ai
-
-  wrapcheck:
-    ignoreSigs:
-      # defaults
-      - ".Errorf("
-      - ".Err("
-      - "errors.New("
-      - "errors.Unwrap("
-      - ".Wrap("
-      - ".Wrapf("
-      - ".WithMessage("
-      - ".WithMessagef("
-      - ".WithStack("
-      # Don't check "file info" errors
-      - ".Info("
-      - ".Stat("
-      - ".Lstat("
-      - ".Close()" # another linter handles close err
-      - ".WalkDir("
-      # edge case for using telemetry interfaces directoy
-      - "gitlab.com/act3-ai/asce/data/telemetry/"
-      # expected to work
-      - .ExecuteContext( # cobra command
-      - (*golang.org/x/sync/errgroup.Group).Wait()
-      - "status.Error("
-    ignoreSigRegexps:
-      # ignore printing (to stdout)
-      - "fmt\\..?(P|p)rint.*\\("
-      - "\\(gitlab.com/act3-ai/asce/data/tool/pkg/.*"
-    ignorePackageGlobs:
-      - encoding/*
-      # - gitlab.com/act3-ai/* # Only catches things when they are imported
-
-  gocognit:
-    min-complexity: 35
-  
-  sloglint:
-    # Enforce not mixing key-value pairs and attributes.
-    # Default: true
-    # no-mixed-args: false
-
-    # Enforce using key-value pairs only (overrides no-mixed-args, incompatible with attr-only).
-    # Default: false
-    # kv-only: true
-
-    # Enforce using attributes only (overrides no-mixed-args, incompatible with kv-only).
-    # Default: false
-    # attr-only: true
-
-    # Enforce using methods that accept a context.
-    # Default: false
-    context: scope
-
-    # Enforce using static values for log messages.
-    # Default: false
-    static-msg: true
-
-    # Enforce using constants instead of raw keys.
-    # Default: false
-    # no-raw-keys: true
-
-    # Enforce a single key naming convention.
-    # Values: snake, kebab, camel, pascal
-    # Default: ""
-    key-naming-case: camel
-
-    # Enforce putting arguments on separate lines.
-    # Default: false
-    # args-on-sep-lines: true
-
-issues:
-  # uncomment to enable more linting
-  # exclude-use-default: false
-
-  include:  
-    # - EXC0001
-    - EXC0002
-    - EXC0005
-    - EXC0009
-    - EXC0011
-    - EXC0012
-    - EXC0013
-    - EXC0014
-    - EXC0015
+    - dupl
+    - errname
+    - errorlint
+    - exhaustive
+    - gochecknoinits
+    - gocognit
+    - gocritic
+    - godot
+    - importas
+    - misspell
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - prealloc
+    - revive
+    - sloglint
+    - thelper
+    - usestdlibvars
+    - wrapcheck
+  settings:
+    gocognit:
+      min-complexity: 35
+    revive:
+      severity: warning
+      rules:
+        - name: atomic
+        - name: unhandled-error
+          arguments:
+            - fmt.Printf
+            - fmt.Println
+            - fmt.Print
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+        - name: defer
+        - name: useless-break
+        - name: unexported-naming
+        - name: use-any
+        - name: deep-exit
+        - name: unnecessary-stmt
+        - name: modifies-value-receiver
+        - name: call-to-gc
+        - name: import-shadowing
+    sloglint:
+      context: scope
+      static-msg: true
+      key-naming-case: camel
+    staticcheck:
+      checks:
+        - all
+    wrapcheck:
+      ignore-sigs:
+        - .Errorf(
+        - .Err(
+        - errors.New(
+        - errors.Unwrap(
+        - .Wrap(
+        - .Wrapf(
+        - .WithMessage(
+        - .WithMessagef(
+        - .WithStack(
+        - .Info(
+        - .Stat(
+        - .Lstat(
+        - .Close()
+        - .WalkDir(
+        - git.act3-ace.com/ace/data/telemetry/
+        - .ExecuteContext(
+        - (*golang.org/x/sync/errgroup.Group).Wait()
+        - status.Error(
+      ignore-sig-regexps:
+        - fmt\..?(P|p)rint.*\(
+        - \(git.act3-ace.com/ace/data/tool/pkg/.*
+      ignore-package-globs:
+        - encoding/*
+        - git.act3-ace.com/*
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - git.act3-ace.com/ace
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
