@@ -26,6 +26,7 @@ csi-bottle info readme [flags]
 ## Options
 
 ```plaintext
+Options:
   -h, --help                 help for readme
   -w, --write string[="."]   write the document to a Markdown file (optionally specify a target directory)
 ```
@@ -33,6 +34,7 @@ csi-bottle info readme [flags]
 ## Options inherited from parent commands
 
 ```plaintext
+Global options:
   -v, --verbosity strings[=warn]   Logging verbosity level (also setable with environment variable ACE_DATA_CSI_VERBOSITY)
-                                   Aliases: error=0, warn=4, info=8, debug=12 (default [error])
+                                   Aliases: error=0, warn=4, info=8, debug=12 (default [warn])
 ```

@@ -1,3 +1,99 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.7.0] - 2025-04-10
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* 0.6.13
+- *(release)* 0.6.14
+- *(release)* 0.6.15
+
+### 🐛 Bug Fixes (chart)
+
+- *(chart)* Support extra volume mounts in csi bottle chart
+- *(chart)* Only need pod label on the pod not the selector
+
+### 🐛 Bug Fixes (ci)
+
+- *(ci)* Add GOMAXPROCS and GOMEMLIMIT to gitlab-ci.yml
+
+### 🐛 Bug Fixes (deps)
+
+- *(deps)* Update dependency devsecops/cicd/pipeline to v19.0.26
+- *(deps)* Update module google.golang.org/grpc to v1.65.0
+- *(deps)* Update module github.com/google/ko to v0.16.0
+- *(deps)* Update module github.com/elastic/crd-ref-docs to v0.1.0
+- *(deps)* Update module github.com/golangci/golangci-lint to v1.60.1
+- *(deps)* Update module github.com/spf13/cobra to v1.8.1
+- *(deps)* Update module golang.org/x/sync to v0.8.0
+- *(deps)* Update module sigs.k8s.io/controller-tools to v0.16.0
+- *(deps)* Update module git.act3-ace.com/ace/data/telemetry to v0.21.3
+- *(deps)* Update dependency devsecops/cicd/pipeline to v19.0.29
+- *(deps)* Update module github.com/golangci/golangci-lint to v1.60.3
+- *(deps)* Update kubernetes packages to v0.31.0
+- *(deps)* Update module sigs.k8s.io/controller-tools to v0.16.2
+- *(deps)* Update reg.git.act3-ace.com/ace/data/csi/csi-bottle docker tag to v0.6.12
+- *(deps)* Update module github.com/kubernetes-csi/csi-lib-utils to v0.19.0
+- *(deps)* Update module google.golang.org/grpc to v1.66.0
+- *(deps)* Update registry.k8s.io/sig-storage/livenessprobe docker tag to v2.14.0
+- *(deps)* Update registry.k8s.io/sig-storage/csi-node-driver-registrar docker tag to v2.12.0
+- *(deps)* Update k8s.io/utils digest to 702e33f
+- *(deps)* Update module github.com/prometheus/client_golang to v1.20.2
+- *(deps)* Update module git.act3-ace.com/ace/data/telemetry to v1
+- *(deps)* Update module github.com/container-storage-interface/spec to v1.10.0
+- *(deps)* Update dependency devsecops/cicd/pipeline to v19.0.32
+- *(deps)* Update dependency go to v1.23.1
+- *(deps)* Update module git.act3-ace.com/ace/data/telemetry to v1.0.1
+- *(deps)* Update module github.com/prometheus/client_golang to v1.20.3
+- *(deps)* Update module git.act3-ace.com/ace/data/tool to v1.13.0
+- *(deps)* Update k8s.io/utils digest to 49e7df5
+- *(deps)* Update kubernetes packages to v0.31.1
+- *(deps)* Update module google.golang.org/grpc to v1.67.0
+- *(deps)* Update module sigs.k8s.io/controller-tools to v0.16.3
+- *(deps)* Update dependency devsecops/cicd/pipeline to v19.0.34
+- *(deps)* Update module github.com/prometheus/client_golang to v1.20.4
+- *(deps)* Update module github.com/golangci/golangci-lint to v1.61.0
+- *(deps)* Bump ace-dt to v1.13.1
+- *(deps)* Update dependency go to v1.23.2
+- *(deps)* Update module sigs.k8s.io/controller-tools to v0.16.4
+- *(deps)* Update module google.golang.org/grpc to v1.67.1
+- *(deps)* Update module git.act3-ace.com/ace/data/tool to v1.13.2
+- *(deps)* Update kubernetes packages to v0.31.2
+- *(deps)* Update module github.com/prometheus/client_golang to v1.20.5
+- *(deps)* Update dependency devsecops/cicd/pipeline to v19.0.35
+
+### 🐛 Bug Fixes (license)
+
+- *(license)* MIT License
+
+### 💼 Other
+
+- Always mount with noexec
+- Release.sh
+- Daggerize pipeline
+- Update golangci-lint config to use github prefixes
+- Update chart and default values
+- Appease markdown, golangci-lint, and shellcheck
+
+### 📦 Dependencies
+
+- Update telemetry api to v1alpha2
+- Convert gitlab.com/act3-ai/asce/data/csi to github.com/act3-ai/data-csi
+- Convert external deps gitlab.com/act3-ai/asce/* to github.com/act3-ai/*
+
+### 🗡️ Dagger
+
+- Bump to v0.18.2
+- *(deps)* Bump golangci-lint module to v0.9.0
+- *(deps)* Bump registry-config module to v0.8.0
+- Update for github
+
+### 🚀 Features (0.6.12)
+
+- *(0.6.12)* Initial commit for act3-ai repo
+
 ## [0.6.15](https://git.act3-ace.com/ace/data/csi/compare/v0.6.14...v0.6.15) (2024-10-30)
 
 
