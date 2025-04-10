@@ -13,8 +13,8 @@ import (
 	"gitlab.com/act3-ai/asce/go-common/pkg/runner"
 	vv "gitlab.com/act3-ai/asce/go-common/pkg/version"
 
-	docs "gitlab.com/act3-ai/asce/data/csi"
-	"gitlab.com/act3-ai/asce/data/csi/cmd/csi-bottle/cli"
+	docs "github.com/act3-ai/data-csi"
+	"github.com/act3-ai/data-csi/cmd/csi-bottle/cli"
 )
 
 // Retrieves build info.

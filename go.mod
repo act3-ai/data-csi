@@ -1,4 +1,4 @@
-module gitlab.com/act3-ai/asce/data/csi
+module github.com/act3-ai/data-csi
 
 go 1.23.5
 
