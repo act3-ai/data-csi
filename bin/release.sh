@@ -198,6 +198,7 @@ approve)
 
 publish)
     version=$(cat VERSION)
+    fullVersion=v${version}
     platforms=linux/amd64,linux/arm64,linux/arm,linux/s390x,linux/ppc64le
 
     # build for all supported platforms

@@ -101,11 +101,11 @@ func NewNodeServer(name, nodeID, storageDir string, telemHosts []telemv1alpha2.L
 
 // NodeGetCapabilities returns the supported capabilities of the node server.
 func (ns *NodeServer) NodeGetCapabilities(ctx context.Context, req *csi.NodeGetCapabilitiesRequest) (*csi.NodeGetCapabilitiesResponse, error) {
-	newCap := func(cap csi.NodeServiceCapability_RPC_Type) *csi.NodeServiceCapability {
+	newCap := func(capability csi.NodeServiceCapability_RPC_Type) *csi.NodeServiceCapability {
 		return &csi.NodeServiceCapability{
 			Type: &csi.NodeServiceCapability_Rpc{
 				Rpc: &csi.NodeServiceCapability_RPC{
-					Type: cap,
+					Type: capability,
 				},
 			},
 		}
