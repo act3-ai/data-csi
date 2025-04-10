@@ -5,7 +5,7 @@ type: application
 version: 0.6.15
 appVersion: 0.6.15
 sources:
-  - https://gitlab.com/act3-ai/asce/data/csi
+  - https://github.com/act3-ai/data-csi
 maintainers:
-  - name: Kyle M. Tarplee
-    email: kyle.tarplee@udri.udayton.edu
+  - name: Nathan D. Joslin
+    email: nathan.joslin@udri.udayton.edu
