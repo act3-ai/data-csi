@@ -19,8 +19,8 @@ import (
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 
-	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"gitlab.com/act3-ai/asce/data/tool/pkg/cache"
+	telemv1alpha2 "github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-tool/pkg/cache"
 )
 
 // Driver object s the top level object for this package.

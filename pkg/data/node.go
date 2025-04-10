@@ -24,11 +24,11 @@ import (
 	"oras.land/oras-go/v2/registry/remote/auth"
 	credstore "oras.land/oras-go/v2/registry/remote/credentials"
 
-	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"gitlab.com/act3-ai/asce/data/tool/pkg/conf"
-	telem "gitlab.com/act3-ai/asce/data/tool/pkg/telemetry"
-	tbottle "gitlab.com/act3-ai/asce/data/tool/pkg/transfer/bottle"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
+	telemv1alpha2 "github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/data-tool/pkg/conf"
+	telem "github.com/act3-ai/data-tool/pkg/telemetry"
+	tbottle "github.com/act3-ai/data-tool/pkg/transfer/bottle"
+	"github.com/act3-ai/go-common/pkg/logger"
 )
 
 // NodeServer implements csi.NodeServer.
