@@ -149,7 +149,7 @@ func (r *Release) Notes(ctx context.Context,
 
 	b.WriteString("| Images |\n")
 	b.WriteString("| --------------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-csi/csi-bottle:v%s |\n\n", "v"+version)
+	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-csi/csi-bottle:%s |\n\n", "v"+version)
 
 	b.WriteString("### ")
 	notes = strings.Replace(notes, "### ", b.String(), 1)
