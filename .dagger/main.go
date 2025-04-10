@@ -20,13 +20,10 @@ import (
 
 const (
 	// repository information
-	gitlabHost    = "https://gitlab.com"
-	gitlabProject = "act3-ai/asce/data/csi"
+	gitRepo = "act3-ai/data-csi"
 
 	// images
-	imageGitlabCLI        = "registry.gitlab.com/gitlab-org/cli:latest"
 	imageGitCliff         = "docker.io/orhunp/git-cliff:2.8.0"
-	imageGo               = "golang:latest" // github.com/sagikazarmark/daggerverse/go convention
 	imageDistrolessDebian = "gcr.io/distroless/static-debian12:debug"
 
 	// go tools

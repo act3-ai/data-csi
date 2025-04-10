@@ -81,12 +81,7 @@ func build(ctx context.Context,
 	_, span := Tracer().Start(ctx, fmt.Sprintf("Build %s", name))
 	defer span.End()
 
-	return dag.Go(
-		dagger.GoOpts{
-			Container: dag.Container().
-				From(imageGo).                            // same as dag.Go, but...
-				WithMountedSecret("/root/.netrc", netrc), // allows us to mount this secret
-		}).
+	return dag.Go().
 		WithSource(src).
 		WithCgoDisabled().
 		WithEnvVariable("GOFIPS140", fipsMode).
@@ -139,7 +134,8 @@ func (c *Csi) ImageIndex(ctx context.Context,
 	for _, platform := range platforms {
 		p.Go(func(ctx context.Context) (*dagger.Container, error) {
 			img := c.Image(ctx, version, platform).
-				WithLabel("org.opencontainers.image.url", imgURL)
+				WithLabel("org.opencontainers.image.url", imgURL).
+				WithLabel("org.opencontainers.image.source", "https://github.com/act3-ai/data-csi")
 			return img, nil
 		})
 	}
@@ -181,6 +177,7 @@ func withCommonLabels(ctr *dagger.Container, version string) *dagger.Container {
 		WithLabel("org.opencontainers.image.vendor", "AFRL ACT3").
 		WithLabel("org.opencontainers.image.version", version).
 		WithLabel("org.opencontainers.image.title", "CSI Driver").
-		WithLabel("org.opencontainers.image.url", path.Join(gitlabHost, gitlabProject)).
-		WithLabel("org.opencontainers.image.description", "ACE Data Tool Telemetry Server")
+		WithLabel("org.opencontainers.image.url", "ghcr.io/act3-ai/data-csi").
+		WithLabel("org.opencontainers.image.description", "ACE Data Tool Telemetry Server").
+		WithLabel("org.opencontainers.image.source", "https://github.com/act3-ai/data-csi")
 }

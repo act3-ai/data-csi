@@ -4,16 +4,8 @@ import (
 	"context"
 	"dagger/csi/internal/dagger"
 	"fmt"
-	"path"
 	"path/filepath"
-	"regexp"
-	"slices"
 	"strings"
-
-	"dagger.io/dagger/dag"
-	"github.com/sourcegraph/conc/pool"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // Run release steps.
@@ -77,17 +69,43 @@ func (r *Release) Publish(ctx context.Context,
 	src *dagger.Directory,
 	// gitlab personal access token
 	token *dagger.Secret,
-) (string, error) {
+) error {
 	version, err := src.File("VERSION").Contents(ctx)
 	if err != nil {
-		return "", err
+		return err
 	}
 	version = strings.TrimSpace(version)
+	vVersion := "v" + version
 
-	notesFileName := fmt.Sprintf("v%s.md", version)
-	notes := src.File(filepath.Join("releases", notesFileName))
+	// TODO: Consider isolating release assets into bin/release
+	// This setup risks a dev test build being published
+	assets := src.Directory("bin/release/assets") // changes to this dir path must be reflected in bin/release.sh publish step
+	releaseAssetPaths, err := assets.Entries(ctx)
+	if err != nil {
+		return err
+	}
+	if len(releaseAssetPaths) < 1 {
+		return fmt.Errorf("no release assets found, please do not remove release assets from 'bin/release/assets' before completing the release process")
+	}
 
-	return r.createRelease(ctx, version, notes, token)
+	releaseAssets := make([]*dagger.File, 0, len(releaseAssetPaths))
+	for _, path := range releaseAssetPaths {
+		releaseAssets = append(releaseAssets, assets.File(path))
+	}
+
+	notes := src.File(filepath.Join("releases", vVersion+".md"))
+	return dag.Gh(
+		dagger.GhOpts{
+			Token:  token,
+			Repo:   gitRepo,
+			Source: src,
+		}).
+		Release().
+		Create(ctx, vVersion, vVersion, // release title same as tagged version
+			dagger.GhReleaseCreateOpts{
+				NotesFile: notes,
+				Files:     releaseAssets,
+			})
 }
 
 // Generate the change log from conventional commit messages (see cliff.toml)
@@ -127,45 +145,16 @@ func (r *Release) Notes(ctx context.Context,
 	b := &strings.Builder{}
 	b.WriteString("| Charts |\n")
 	b.WriteString("| ----------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| registry.gitlab.com/ace/data/csi/charts/csi-bottle:%s |", version)
+	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-csi/charts/csi-bottle:%s |", version)
 
 	b.WriteString("| Images |\n")
 	b.WriteString("| --------------------------------------------------------- |\n")
-	fmt.Fprintf(b, "| registry.gitlab.com/ace/data/csi/csi-bottle:%s |\n", "v"+version)
+	fmt.Fprintf(b, "| ghcr.io/act3-ai/data-csi/csi-bottle:v%s |\n\n", "v"+version)
 
-	b.WriteRune('\n')
 	b.WriteString("### ")
-
 	notes = strings.Replace(notes, "### ", b.String(), 1)
 
 	return notes, nil
-}
-
-// create a release for an existing tag.
-func (r *Release) createRelease(ctx context.Context,
-	// release version
-	version string,
-	// release notes file
-	notes *dagger.File,
-	// gitlab personal access token
-	token *dagger.Secret,
-) (string, error) {
-	notesFileName, err := notes.Name(ctx)
-	if err != nil {
-		return "", err
-	}
-	return dag.Container().
-		From(imageGitlabCLI).
-		WithMountedFile(notesFileName, notes).
-		WithSecretVariable("GITLAB_TOKEN", token).
-		WithEnvVariable("GITLAB_HOST", gitlabHost).
-		WithExec([]string{"glab", "release", "create",
-			"-R", gitlabProject, // repository
-			"v" + version,                 // tag
-			"--name=Release v" + version,  // title
-			"--notes-file", notesFileName, // description
-		}).
-		Stdout(ctx)
 }
 
 func (r *Release) gitCliffContainer() *dagger.Container {
@@ -173,77 +162,10 @@ func (r *Release) gitCliffContainer() *dagger.Container {
 		From(imageGitCliff).
 		With(func(c *dagger.Container) *dagger.Container {
 			if r.Token != nil {
-				return c.WithSecretVariable("GITLAB_TOKEN", r.Token).
-					WithEnvVariable("GITLAB_API_URL", path.Join(gitlabHost, "/api/v4")).
-					WithEnvVariable("GITLAB_REPO", gitlabProject)
+				return c.WithSecretVariable("GITHUB_TOKEN", r.Token).
+					WithEnvVariable("GITHUB_REPO", gitRepo)
 			}
 			return c
 		}).
 		WithMountedDirectory("/app", r.Source)
-}
-
-// UploadAssets publishes binaries as assets to an existing release tag.
-func (r *Release) UploadAssets(ctx context.Context,
-	// release version
-	version string,
-	// release assets
-	assets *dagger.Directory,
-	// gitlab personal access token
-	token *dagger.Secret,
-) (string, error) {
-	releaseAssets, err := assets.Entries(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	ctx, span := Tracer().Start(ctx, "Upload Builds", trace.WithAttributes(attribute.StringSlice("Assets", releaseAssets)))
-	defer span.End()
-
-	// remove unwanted items that exist in bin dir
-	wantedBins := regexp.MustCompile("csi-bottle-*")
-	cleanedAssets := slices.DeleteFunc(releaseAssets, func(s string) bool {
-		return !wantedBins.MatchString(s)
-	})
-
-	p := pool.NewWithResults[string]().WithContext(ctx)
-	for _, asset := range cleanedAssets {
-		p.Go(func(ctx context.Context) (string, error) {
-			_, err := r.uploadBuild(ctx, version, assets.File(asset), token)
-			if err != nil {
-				return fmt.Sprintf("Failed to upload asset - %s", asset), err
-			}
-			return fmt.Sprintf("Asset Uploaded - %s", asset), nil
-		})
-	}
-
-	result, err := p.Wait()
-	return strings.Join(result, "\n"), err
-}
-
-func (r *Release) uploadBuild(ctx context.Context,
-	// release version
-	version string,
-	// build file
-	build *dagger.File,
-	// gitlab personal access token
-	token *dagger.Secret,
-) (string, error) {
-	buildName, err := build.Name(ctx)
-	if err != nil {
-		return "", err
-	}
-	ctx, span := Tracer().Start(ctx, fmt.Sprintf("upload release asset %s", buildName))
-	defer span.End()
-
-	return dag.Container().
-		From(imageGitlabCLI).
-		WithMountedFile(buildName, build).
-		WithSecretVariable("GITLAB_TOKEN", token).
-		WithEnvVariable("GITLAB_HOST", gitlabHost).
-		WithExec([]string{"glab", "release", "upload",
-			"-R", gitlabProject,
-			"v" + version,
-			buildName},
-		).
-		Stdout(ctx)
 }
