@@ -7,12 +7,12 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/data/csi/pkg/data"
-	telemv1alpha2 "gitlab.com/act3-ai/asce/data/telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
-	"gitlab.com/act3-ai/asce/go-common/pkg/config"
-	"gitlab.com/act3-ai/asce/go-common/pkg/logger"
-	"gitlab.com/act3-ai/asce/go-common/pkg/redact"
-	"gitlab.com/act3-ai/asce/go-common/pkg/version"
+	"github.com/act3-ai/data-csi/pkg/data"
+	telemv1alpha2 "github.com/act3-ai/data-telemetry/v3/pkg/apis/config.telemetry.act3-ace.io/v1alpha2"
+	"github.com/act3-ai/go-common/pkg/config"
+	"github.com/act3-ai/go-common/pkg/logger"
+	"github.com/act3-ai/go-common/pkg/redact"
+	"github.com/act3-ai/go-common/pkg/version"
 )
 
 // NewServeCmd creates a new "serve" subcommand.

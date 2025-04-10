@@ -50,11 +50,11 @@ func (ids *IdentityServer) Probe(ctx context.Context, req *csi.ProbeRequest) (*c
 
 // GetPluginCapabilities conforms to CSI spec.
 func (ids *IdentityServer) GetPluginCapabilities(ctx context.Context, req *csi.GetPluginCapabilitiesRequest) (*csi.GetPluginCapabilitiesResponse, error) {
-	newCap := func(cap csi.PluginCapability_Service_Type) *csi.PluginCapability {
+	newCap := func(capability csi.PluginCapability_Service_Type) *csi.PluginCapability {
 		return &csi.PluginCapability{
 			Type: &csi.PluginCapability_Service_{
 				Service: &csi.PluginCapability_Service{
-					Type: cap,
+					Type: capability,
 				},
 			},
 		}

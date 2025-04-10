@@ -9,14 +9,14 @@ prepare - prepare a release locally by producing the changelog, notes, assets, e
 approve - commit, tag, and push your approved release.
 publish - publish the release to GitLab by uploading assets, images, helm chart, etc.
 
-Dependencies: dagger, oras, and gitlab.com OCI registry access.
+Dependencies: dagger, oras, make, and git.
 
-Environment Variables with Defaults:
-    - ACE_CSI_RELEASE_NETRC=~/.netrc
+Required Environment Variables:
+Without Defaults:
+    - GITHUB_API_TOKEN - repo access
+    - GITHUB_REG_TOKEN - write:packages access
+    - GITHUB_REG_USER  - username of GITHUB_REG_TOKEN owner
 
-Environment Variables without Defaults:
-    - GITLAB_REG_TOKEN
-    - GITLAB_REG_USER
 EOF
     exit 1
 }
@@ -27,9 +27,8 @@ fi
 
 set -x
 
-registry=registry.gitlab.com
-registryRepo=$registry/act3-ai/asce/data/csi
-netrcPath=${ACE_CSI_RELEASE_NETRC:=~/.netrc}
+registry=ghcr.io
+registryRepo=$registry/act3-ai/data-csi
 
 # Extract the major version of a release.
 parseMajor() {
@@ -155,9 +154,8 @@ prepare)
 
     dagger call lint all
 
-    # run unit tests (no other tests exist)
+    # run unit tests (no other tests exist, besides testing with a VM)
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         test unit
 
     # update changelog, release notes, semantic version
@@ -168,22 +166,14 @@ prepare)
 
     # govulncheck
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         vuln-check
 
     # generate CLI docs
     dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
         clidocs \
         export --path=./docs/cli
 
     version=$(cat VERSION)
-
-    # build for all supported platforms
-    dagger call \
-        with-netrc --netrc=file:"$netrcPath" \
-        build-platforms --version="$version" \
-        export --path=./bin
 
     echo "Please review the local changes, especially releases/$version.md"
     ;;
@@ -208,28 +198,32 @@ approve)
 
 publish)
     version=$(cat VERSION)
+    fullVersion=v${version}
     platforms=linux/amd64,linux/arm64,linux/arm,linux/s390x,linux/ppc64le
+
+    # build for all supported platforms
+    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
+    mkdir -p "$assetsDir"
+    dagger call \
+        build-platforms --version="$version" \
+        export --path="$assetsDir"
 
     # publish release
     dagger call \
-        with-registry-auth --address="$registry" --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN \
+        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         release \
-        publish --token=env:GITLAB_REG_TOKEN
+        publish --token=env:GITHUB_API_TOKEN
 
     # publish helm chart
     dagger call \
         release \
-        publish-chart --ociRepo oci://$registryRepo/charts --address="$registry" --username="$GITLAB_REG_USER" --secret env:GITLAB_REG_TOKEN
-
-    # upload release assets (binaries)
-    dagger call release upload-assets --version="$version" --assets=./bin --token=env:GITLAB_REG_TOKEN
+        publish-chart --ociRepo oci://$registryRepo/charts --address="$registry" --username="$GITHUB_REG_USER" --secret env:GITHUB_REG_TOKEN
 
     # publish image
     # Note: Changes to existing or inclusions of additional image references should be reflected in the release notes generated in ../.dagger/release.go
     imageRepoRef="${registryRepo}:${fullVersion}"
     dagger call \
-        with-registry-auth --address=$registry --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN \
-        with-netrc --netrc=file:"$netrcPath" \
+        with-registry-auth --address=$registry --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         image-index --version="$fullVersion" --platforms="$platforms" --address "$imageRepoRef"
 
     # shellcheck disable=SC2046
@@ -238,7 +232,7 @@ publish)
     # scan images with ace-dt
     echo "$imageRepoRef" > artifacts.txt
     # TODO: Uncomment me when we have a suitable public registry for custom artifact types.
-    # dagger call with-registry-auth --address=$registry --username="$GITLAB_REG_USER" --secret=env:GITLAB_REG_TOKEN with-netrc --netrc=file:"$netrcPath" scan --sources artifacts.txt
+    # dagger call with-registry-auth --address=$registry --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN with-netrc --netrc=file:"$netrcPath" scan --sources artifacts.txt
     ;;
 
 *)

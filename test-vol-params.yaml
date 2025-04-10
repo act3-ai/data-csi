@@ -1,4 +1,4 @@
 # Specify your bottle here.
-bottle: ghcr.io/nathan-joslin/bottles/mnist:v1.7
+bottle: ghcr.io/act3-ai/data-tool/bottles/mnist:v1.6
 # Specify selectors to limit data
 selector: "subset=train,component=image|usage=true"

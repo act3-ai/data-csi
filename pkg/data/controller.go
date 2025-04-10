@@ -42,11 +42,11 @@ func NewControllerServer(name, nodeID string, log *slog.Logger) *ControllerServe
 
 // ControllerGetCapabilities returns the capabilities of the controller service.
 func (cs *ControllerServer) ControllerGetCapabilities(ctx context.Context, req *csi.ControllerGetCapabilitiesRequest) (*csi.ControllerGetCapabilitiesResponse, error) {
-	newCap := func(cap csi.ControllerServiceCapability_RPC_Type) *csi.ControllerServiceCapability {
+	newCap := func(capability csi.ControllerServiceCapability_RPC_Type) *csi.ControllerServiceCapability {
 		return &csi.ControllerServiceCapability{
 			Type: &csi.ControllerServiceCapability_Rpc{
 				Rpc: &csi.ControllerServiceCapability_RPC{
-					Type: cap,
+					Type: capability,
 				},
 			},
 		}

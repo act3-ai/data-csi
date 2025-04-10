@@ -4,7 +4,7 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
-	"gitlab.com/act3-ai/asce/go-common/pkg/version"
+	"github.com/act3-ai/go-common/pkg/version"
 )
 
 // NewRootCmd create a new root command.

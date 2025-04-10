@@ -23,11 +23,6 @@ all: build
 # some CI systems (like TravisCI, which pulls only 50 commits).
 REV=$(shell git describe --long --tags --match='v*' --dirty 2>/dev/null || git rev-list -n1 HEAD)
 
-# This is the default. It can be overridden in the main Makefile after
-# including build.make.
-REGISTRY_NAME=zot.lion.act3-ace.ai
-IMAGE_REPO ?= $(REGISTRY_NAME)/ace/data/csi
-
 ############################################################
 # External tools
 ############################################################
