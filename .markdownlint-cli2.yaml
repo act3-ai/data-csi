@@ -9,3 +9,4 @@ ignores:
   - "CHANGELOG.md"
   - "docs/cli/**"
   - "docs/apis/**"
+  - releases/**
