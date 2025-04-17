@@ -5,7 +5,7 @@ go 1.23.7
 toolchain go1.24.2
 
 require (
-	github.com/act3-ai/data-telemetry/v3 v3.1.3
+	github.com/act3-ai/data-telemetry/v3 v3.1.5
 	github.com/act3-ai/data-tool v1.15.33
 	github.com/act3-ai/go-common v0.0.0-20250410135331-13316702f911
 	github.com/container-storage-interface/spec v1.10.0
