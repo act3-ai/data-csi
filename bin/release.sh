@@ -231,8 +231,7 @@ publish)
 
     # scan images with ace-dt
     echo "$imageRepoRef" > artifacts.txt
-    # TODO: Uncomment me when we have a suitable public registry for custom artifact types.
-    # dagger call with-registry-auth --address=$registry --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN with-netrc --netrc=file:"$netrcPath" scan --sources artifacts.txt
+    dagger call with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN scan --sources artifacts.txt
     ;;
 
 *)

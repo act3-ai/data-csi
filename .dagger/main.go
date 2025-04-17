@@ -25,6 +25,9 @@ const (
 	// images
 	imageGitCliff         = "docker.io/orhunp/git-cliff:2.8.0"
 	imageDistrolessDebian = "gcr.io/distroless/static-debian12:debug"
+	imageGrype            = "anchore/grype:latest"
+	imageSyft             = "anchore/syft:latest"
+	imageAcedt            = "ghcr.io/act3-ai/data-tool:v1.15.33"
 
 	// go tools
 	goVulnCheck = "golang.org/x/vuln/cmd/govulncheck@latest"
