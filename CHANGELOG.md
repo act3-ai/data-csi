@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2025-04-17
+
+### 💼 Other
+
+- Update github actions to build with snapshots enabled by @nathan-joslin
+- Update config to ensure release to data-csi by @nathan-joslin
+
+### 📦 Dependencies
+
+- Bump ace-dt to v1.15.33 by @nathan-joslin
+- Bump data-telemetry to v3.1.5
+
+### 🗡️ Dagger
+
+- Add image scanning with ace-dt by @nathan-joslin
+- Switch builds and releases to use goreleaser by @nathan-joslin
+
 ## [0.7.0] - 2025-04-10
 
 ### ⚙️ Miscellaneous Tasks
