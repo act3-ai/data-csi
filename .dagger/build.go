@@ -8,45 +8,21 @@ import (
 	"strings"
 
 	"github.com/sourcegraph/conc/pool"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	"oras.land/oras-go/v2/registry"
 )
 
 // Generate a directory of csi-bottle executables built for all supported platforms, concurrently.
 func (c *Csi) BuildPlatforms(ctx context.Context,
-	// release version
+	// snapshot build, skip goreleaser validations
 	// +optional
-	version string,
-) (*dagger.Directory, error) {
-	// build matrix
-	gooses := []string{"linux"}
-	goarches := []string{"amd64", "arm64", "arm", "s390x", "ppc64le"}
-
-	ctx, span := Tracer().Start(ctx, "Build Platforms", trace.WithAttributes(attribute.StringSlice("GOOS", gooses), attribute.StringSlice("GOARCH", goarches)))
-	defer span.End()
-
-	buildsDir := dag.Directory()
-	p := pool.NewWithResults[*dagger.File]().WithContext(ctx)
-
-	for _, goos := range gooses {
-		for _, goarch := range goarches {
-			p.Go(func(ctx context.Context) (*dagger.File, error) {
-				platform := fmt.Sprintf("%s/%s", goos, goarch)
-				bin := c.Build(ctx, dagger.Platform(platform), version, "latest")
-				return bin, nil
-			})
-		}
-	}
-
-	bins, err := p.Wait()
-	if err != nil {
-		return nil, err
-	}
-	return buildsDir.WithFiles(".", bins), nil
+	snapshot bool,
+) *dagger.Directory {
+	return GoReleaser(c.Source).
+		WithExec([]string{"goreleaser", "build", "--clean", "--auto-snapshot", "--timeout=10m", fmt.Sprintf("--snapshot=%v", snapshot)}).
+		Directory("dist")
 }
 
-// Build an executable for the specified platform, named "csi-bottle-v{VERSION}-{GOOS}-{GOARCH}".
+// Build an executable for the specified platform, named "csi-bottle--{GOOS}-{GOARCH}".
 //
 // Supported Platform Matrix:
 //
@@ -57,54 +33,37 @@ func (c *Csi) Build(ctx context.Context,
 	// +optional
 	// +default="linux/amd64"
 	platform dagger.Platform,
-	// Release version, included in file name
+	// snapshot build, skip goreleaser validations
 	// +optional
-	version string,
-	// value of GOFIPS140, accepts modes "off", "latest", and "v1.0.0"
-	// +optional
-	// +default="latest"
-	fipsMode string,
+	snapshot bool,
 ) *dagger.File {
-	return build(ctx, c.Source, c.Netrc, platform, version, fipsMode)
+	return build(ctx, c.Source, platform, snapshot)
 }
 
 func build(ctx context.Context,
 	src *dagger.Directory,
-	netrc *dagger.Secret,
 	platform dagger.Platform,
-	version string,
-	fipsMode string,
+	// snapshot build, skip goreleaser validations
+	snapshot bool,
 ) *dagger.File {
-	// only name the result "fips" if it
-	name := binaryName(string(platform), version)
+	name := binaryName(string(platform))
 
 	_, span := Tracer().Start(ctx, fmt.Sprintf("Build %s", name))
 	defer span.End()
 
-	return dag.Go().
-		WithSource(src).
-		WithCgoDisabled().
-		WithEnvVariable("GOFIPS140", fipsMode).
-		Build(dagger.GoWithSourceBuildOpts{
-			Pkg:      "./cmd/csi-bottle",
-			Platform: platform,
-			Ldflags:  []string{"-s", "-w", fmt.Sprintf("-X 'main.version=%s'", version), "-extldflags 'static'"},
-			Trimpath: true,
-		}).
-		WithName(name)
+	os, arch, _ := strings.Cut(string(platform), "/")
+	return GoReleaser(src).
+		WithEnvVariable("GOOS", os).
+		WithEnvVariable("GOARCH", arch).
+		WithExec([]string{"goreleaser", "build", "--auto-snapshot", "--timeout=10m", "--single-target", "--output", name, fmt.Sprintf("--snapshot=%v", snapshot)}).
+		File(name)
 }
 
 // binaryName constructs the name of a csi-bottle executable based on build params.
-// All arguments are optional, building up to "telemetry-v{VERSION}-fips-{GOOS}-{GOARCH}".
-func binaryName(platform string, version string) string {
+// All arguments are optional, building up to "csi-bottle-{GOOS}-{GOARCH}".
+func binaryName(platform string) string {
 	str := strings.Builder{}
-	str.Grow(35) // est. max = len("telemetry-v1.11.11-fips-linux-amd64")
 	str.WriteString("csi-bottle")
-
-	if version != "" {
-		str.WriteString("-v")
-		str.WriteString(version)
-	}
 
 	if platform != "" {
 		platform = strings.ReplaceAll(string(platform), "/", "-")
@@ -162,7 +121,7 @@ func (c *Csi) Image(ctx context.Context,
 	// ensure to copy files, not mount them; else they won't be in the final image
 	ctr := dag.Container(dagger.ContainerOpts{Platform: platform}).
 		From(imageDistrolessDebian).
-		WithFile("/usr/local/bin/csi-bottle", c.Build(ctx, platform, version, "latest")).
+		WithFile("/usr/local/bin/csi-bottle", c.Build(ctx, platform, false)).
 		WithEntrypoint([]string{"csi-bottle"}).
 		WithWorkdir("/").
 		WithLabel("description", "CSI Driver - For ASCE Data Bottles")

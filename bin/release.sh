@@ -201,18 +201,10 @@ publish)
     fullVersion=v${version}
     platforms=linux/amd64,linux/arm64,linux/arm,linux/s390x,linux/ppc64le
 
-    # build for all supported platforms
-    assetsDir=bin/release/assets # changes to this path must be reflected in .dagger/release.go Publish()
-    mkdir -p "$assetsDir"
+    # publish release, along with release assets
     dagger call \
-        build-platforms --version="$version" \
-        export --path="$assetsDir"
-
-    # publish release
-    dagger call \
-        with-registry-auth --address="$registry" --username="$GITHUB_REG_USER" --secret=env:GITHUB_REG_TOKEN \
         release \
-        publish --token=env:GITHUB_API_TOKEN
+        publish --token=env:GITHUB_API_TOKEN --ssh-private-key=env:SSH_PRIVATE_KEY --author=env:RELEASE_AUTHOR --email=env:RELEASE_AUTHOR_EMAIL
 
     # publish helm chart
     dagger call \
