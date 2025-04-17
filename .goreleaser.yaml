@@ -37,7 +37,7 @@ archives:
 release:
   github:
     owner: act3-ai
-    name: data-tool
+    name: data-csi
   ids:
     - csi-bottle-archives
   make_latest: envOrDefault "RELEASE_LATEST" "true"
