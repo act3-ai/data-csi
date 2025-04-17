@@ -7,7 +7,7 @@ import (
 
 // Generate CLI documentation.
 func (c *Csi) CLIDocs(ctx context.Context) *dagger.Directory {
-	csi := c.Build(ctx, "linux/amd64", "", "")
+	csi := c.Build(ctx, "linux/amd64", false)
 
 	cliDocsPath := "docs/cli"
 	return dag.Go().

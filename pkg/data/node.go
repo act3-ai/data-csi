@@ -323,7 +323,7 @@ func (ns *NodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	stagingPath := req.GetStagingTargetPath()
 
-	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
+	log := ns.log.With("stagingPath", stagingPath, "targetPath", targetPath, "volumeID", volumeID)
 
 	if req.GetVolumeContext()["csi.storage.k8s.io/ephemeral"] == "true" {
 		// we need to make our own stagingPath
@@ -391,7 +391,7 @@ func (ns *NodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 		return nil, status.Error(codes.InvalidArgument, "Target path missing in request")
 	}
 
-	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID) //nolint:sloglint
+	log := ns.log.With("targetPath", targetPath, "volumeID", volumeID)
 
 	// Unmount only if the target path is really a mount point.
 	if notMnt, err := mount.IsNotMountPoint(ns.mounter, targetPath); err != nil {

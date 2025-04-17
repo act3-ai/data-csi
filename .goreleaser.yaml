@@ -1,0 +1,52 @@
+version: 2
+
+builds:
+  - id: csi-bottle
+    binary: csi-bottle
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+      - arm
+      - s390x
+      - ppc64le
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.build={{.Version}}
+      - "-extldflags 'static'"
+    env:
+      - CGO_ENABLED=0
+      - GOFIPS140=latest
+    main: ./cmd/csi-bottle/
+
+archives:
+  - id: csi-bottle-archives
+    ids:
+      - csi-bottle
+    formats: ["tar.gz"]
+    builds_info:
+      mode: 755
+    name_template: "csi-bottle-v{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    files:
+      - LICENSE
+      - src: releases/v{{ .Version }}.md
+        strip_parent: true
+
+release:
+  github:
+    owner: act3-ai
+    name: data-csi
+  ids:
+    - csi-bottle-archives
+  make_latest: envOrDefault "RELEASE_LATEST" "true"
+  mode: replace # if we need to re-release, don't duplicate the release notes
+  skip_upload: false
+
+checksum:
+  name_template: "csi-bottle-v{{ .Version }}-checksums.txt"
+  algorithm: sha256
+  ids:
+    - csi-bottle-archives
+  disable: false
